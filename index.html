@@ -170,13 +170,13 @@
       };
 
       socket.onclose = () => {
-        statusDiv.textContent = "🔴 Desconectado. Reintentando...";
+        statusDiv.textContent = "Desconectado. Reintentando...";
         statusDiv.className = "status status-error";
         setTimeout(conectarServidor, 3000);
       };
 
       socket.onerror = () => {
-        statusDiv.textContent = "❌ Error de conexión.";
+        statusDiv.textContent = "Error de conexión.";
         statusDiv.className = "status status-error";
       };
     }
@@ -196,7 +196,7 @@
           </div>
           <div class="observaciones-container" id="obs-${unidad.id}">
             <textarea id="obs-text-${unidad.id}" placeholder="Escribe observaciones..."></textarea>
-            <button class="btn btn-danger" onclick="registrarMantenimiento('${unidad.id}','${unidad.nombre}',false)">📋 Confirmar</button>
+            <button class="btn btn-danger" onclick="registrarMantenimiento('${unidad.id}','${unidad.nombre}',false)">Confirmar</button>
           </div>
         `;
         unidadesContainer.appendChild(unitDiv);
@@ -212,7 +212,7 @@
       if (!enCondiciones) {
         observaciones = document.getElementById(`obs-text-${unidadId}`).value.trim();
         if (!observaciones) {
-          statusDiv.textContent = "⚠️ Ingresa observaciones antes de confirmar";
+          statusDiv.textContent = "Ingresa observaciones antes de confirmar";
           statusDiv.className = "status status-error";
           return;
         }
@@ -232,3 +232,4 @@
   </script>
 </body>
 </html>
+
