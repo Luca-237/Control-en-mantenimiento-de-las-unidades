@@ -1,18 +1,15 @@
-// Importar librerías
+
 const WebSocket = require("ws");
 const fs = require("fs").promises;
 const path = require("path");
 const os = require("os");
 const express = require("express");
 const http = require("http");
-
-// --- Configuración ---
-const PORT = 3000;             // Único puerto (HTTP + WS)
+const PORT = 3000;            
 const REGISTROS_DIR = "registros";
 const UNIDADES_FILE = "unidades.json";
-const ADMIN_PASSWORD = "bomberos2024"; // Cambia esta contraseña
+const ADMIN_PASSWORD = "bomberos2024"; 
 
-// Función para obtener la IP local
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
   for (const name of Object.keys(interfaces)) {
@@ -25,7 +22,6 @@ function getLocalIP() {
   return "localhost";
 }
 
-// Función para formatear la fecha
 function getFormattedTimestamp() {
   const now = new Date();
   const pad = (num) => num.toString().padStart(2, "0");
@@ -40,7 +36,6 @@ function getFormattedTimestamp() {
   return `${year}-${month}-${day}_${hour}-${minute}-${second}`;
 }
 
-// Cargar unidades desde archivo JSON
 async function loadUnidades() {
   try {
     const data = await fs.readFile(UNIDADES_FILE, "utf-8");
@@ -61,7 +56,6 @@ async function loadUnidades() {
   }
 }
 
-// Guardar unidades
 async function saveUnidades(unidades) {
   try {
     await fs.writeFile(UNIDADES_FILE, JSON.stringify(unidades, null, 2), "utf-8");
@@ -73,18 +67,15 @@ async function saveUnidades(unidades) {
 }
 
 async function setup() {
-  // Asegurar carpeta de registros
   const dirPath = path.join(__dirname, REGISTROS_DIR);
   await fs.mkdir(dirPath, { recursive: true });
 
   let unidades = await loadUnidades();
 
-  // Crear servidor HTTP con Express
   const app = express();
-  app.use(express.static(__dirname)); // Sirve index.html desde esta carpeta
+  app.use(express.static(__dirname));
   const server = http.createServer(app);
 
-  // Crear servidor WebSocket sobre el mismo puerto
   const wss = new WebSocket.Server({ server });
 
   function broadcastUnidades() {
@@ -134,7 +125,7 @@ Observaciones: ${data.observaciones || "Ninguna"}
 
             if (await saveUnidades(unidades)) {
               broadcastUnidades();
-              ws.send(JSON.stringify({ tipo: "confirmacion", mensaje: `✔️ Unidad "${data.nombreUnidad}" agregada exitosamente` }));
+              ws.send(JSON.stringify({ tipo: "confirmacion", mensaje: `Unidad "${data.nombreUnidad}" agregada exitosamente` }));
             }
           } else if (data.accion === "eliminar") {
             unidades = unidades.filter((u) => u.id !== data.unidadId);
@@ -147,7 +138,7 @@ Observaciones: ${data.observaciones || "Ninguna"}
         }
       } catch (error) {
         console.error("Error procesando mensaje:", error);
-        ws.send(JSON.stringify({ tipo: "error", mensaje: "❌ Error al procesar la solicitud" }));
+        ws.send(JSON.stringify({ tipo: "error", mensaje: "Error al procesar la solicitud" }));
       }
     });
 
@@ -165,3 +156,4 @@ Observaciones: ${data.observaciones || "Ninguna"}
 }
 
 setup();
+
