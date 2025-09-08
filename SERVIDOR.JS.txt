@@ -1,0 +1,407 @@
+INDEX.HTML
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Mantenimiento</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #d32f2f;
+      margin-bottom: 20px;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 15px auto;
+      max-width: 120px;
+    }
+    .login-container {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .login-container input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 80%;
+      max-width: 300px;
+    }
+    .login-container button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background: #28a745;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .unit {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px 0;
+      background: #fafafa;
+    }
+    .unit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 5px 3px;
+    }
+    .btn-success { background: #28a745; color: white; }
+    .btn-danger { background: #dc3545; color: white; }
+    .btn:hover { opacity: 0.9; }
+    .observaciones-container {
+      margin-top: 10px;
+      display: none;
+    }
+    .observaciones-container textarea {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      min-height: 60px;
+    }
+    .status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .status-success { background: #d4edda; color: #155724; }
+    .status-error { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <div class="container" id="login-screen">
+    <img src="descarga.jpg" alt="Logo" class="logo">
+    <h1>Ingreso al Sistema</h1>
+    <div class="login-container">
+      <input type="text" id="nombre-operario" placeholder="Ingrese su nombre">
+      <br>
+      <button onclick="ingresar()">Ingresar</button>
+    </div>
+  </div>
+
+  <div class="container" id="app-screen" style="display:none;">
+    <img src="descarga.jpg" alt="Logo" class="logo">
+    <h1>Control de Mantenimiento</h1>
+    <p><b>Operario:</b> <span id="operario-nombre"></span></p>
+    <div id="unidades-container"></div>
+    <div id="status" class="status">Esperando conexión con el servidor...</div>
+  </div>
+
+  <script>
+    const statusDiv = document.getElementById("status");
+    const unidadesContainer = document.getElementById("unidades-container");
+    const loginScreen = document.getElementById("login-screen");
+    const appScreen = document.getElementById("app-screen");
+    const operarioNombreSpan = document.getElementById("operario-nombre");
+    let unidades = [];
+    let socket;
+    let operario = "";
+
+    function ingresar() {
+      const nombre = document.getElementById("nombre-operario").value.trim();
+      if (!nombre) {
+        alert("Por favor ingrese su nombre.");
+        return;
+      }
+      operario = nombre;
+      operarioNombreSpan.textContent = operario;
+      loginScreen.style.display = "none";
+      appScreen.style.display = "block";
+      conectarServidor();
+    }
+
+    function conectarServidor() {
+      const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+      const host = window.location.hostname || "localhost";
+      const wsUrl = `${protocol}//${host}:3000`;
+
+      socket = new WebSocket(wsUrl);
+
+      socket.onopen = () => {
+        statusDiv.textContent = "🟢 Conectado al servidor";
+        statusDiv.className = "status status-success";
+      };
+
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.tipo === "unidades_actualizadas") {
+            unidades = data.unidades;
+            renderizarUnidades();
+          } else if (data.tipo === "confirmacion") {
+            statusDiv.textContent = data.mensaje;
+            statusDiv.className = "status status-success";
+          } else if (data.tipo === "error") {
+            statusDiv.textContent = data.mensaje;
+            statusDiv.className = "status status-error";
+          }
+        } catch {
+          statusDiv.textContent = event.data;
+        }
+      };
+
+      socket.onclose = () => {
+        statusDiv.textContent = " Desconectado. Reintentando...";
+        statusDiv.className = "status status-error";
+        setTimeout(conectarServidor, 3000);
+      };
+
+      socket.onerror = () => {
+        statusDiv.textContent = " Error de conexión.";
+        statusDiv.className = "status status-error";
+      };
+    }
+
+    function renderizarUnidades() {
+      unidadesContainer.innerHTML = "";
+      unidades.forEach((unidad) => {
+        const unitDiv = document.createElement("div");
+        unitDiv.className = "unit";
+        unitDiv.innerHTML = `
+          <div class="unit-header">
+            <span><b>${unidad.nombre}</b></span>
+            <div>
+              <button class="btn btn-success" onclick="registrarMantenimiento('${unidad.id}','${unidad.nombre}',true)">✔️ En condiciones</button>
+              <button class="btn btn-danger" onclick="mostrarObservaciones('${unidad.id}')">❌ No en condiciones</button>
+            </div>
+          </div>
+          <div class="observaciones-container" id="obs-${unidad.id}">
+            <textarea id="obs-text-${unidad.id}" placeholder="Escribe observaciones..."></textarea>
+            <button class="btn btn-danger" onclick="registrarMantenimiento('${unidad.id}','${unidad.nombre}',false)">Confirmar</button>
+          </div>
+        `;
+        unidadesContainer.appendChild(unitDiv);
+      });
+    }
+
+    function mostrarObservaciones(unidadId) {
+      document.getElementById(`obs-${unidadId}`).style.display = "block";
+    }
+
+    function registrarMantenimiento(unidadId, nombreUnidad, enCondiciones) {
+      let observaciones = "";
+      if (!enCondiciones) {
+        observaciones = document.getElementById(`obs-text-${unidadId}`).value.trim();
+        if (!observaciones) {
+          statusDiv.textContent = "Ingresa observaciones antes de confirmar";
+          statusDiv.className = "status status-error";
+          return;
+        }
+      }
+      const mensaje = {
+        tipo: "mantenimiento",
+        unidad: nombreUnidad,
+        observaciones: enCondiciones ? "Sin observaciones (Unidad en condiciones)" : observaciones,
+        operario: operario
+      };
+      socket.send(JSON.stringify(mensaje));
+      if (!enCondiciones) {
+        document.getElementById(`obs-text-${unidadId}`).value = "";
+        document.getElementById(`obs-${unidadId}`).style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
+
+
+SERVIDOR.JS
+
+// Importar librerías
+const WebSocket = require("ws");
+const fs = require("fs").promises;
+const path = require("path");
+const os = require("os");
+const express = require("express");
+const http = require("http");
+
+// --- Configuración ---
+const PORT = 3000;             // Único puerto (HTTP + WS)
+const REGISTROS_DIR = "registros";
+const UNIDADES_FILE = "unidades.json";
+const ADMIN_PASSWORD = "bomberos2024"; // Cambia esta contraseña
+
+// Función para obtener la IP local
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === "IPv4" && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return "localhost";
+}
+
+// Función para formatear la fecha
+function getFormattedTimestamp() {
+  const now = new Date();
+  const pad = (num) => num.toString().padStart(2, "0");
+
+  const year = now.getFullYear();
+  const month = pad(now.getMonth() + 1);
+  const day = pad(now.getDate());
+  const hour = pad(now.getHours());
+  const minute = pad(now.getMinutes());
+  const second = pad(now.getSeconds());
+
+  return `${year}-${month}-${day}_${hour}-${minute}-${second}`;
+}
+
+// Cargar unidades desde archivo JSON
+async function loadUnidades() {
+  try {
+    const data = await fs.readFile(UNIDADES_FILE, "utf-8");
+    return JSON.parse(data);
+  } catch {
+    const defaultUnidades = [
+      { id: "unidad1", nombre: "Unidad 18 - Ataque Pesado" },
+      { id: "unidad2", nombre: "Unidad 20 - Rescate" },
+      { id: "unidad3", nombre: "Unidad 23 - Ataque y rescate" },
+      { id: "unidad4", nombre: "Unidad 24 - Unidad liviana" },
+      { id: "unidad5", nombre: "Unidad 25 - Transporte de personal" },
+      { id: "unidad6", nombre: "Unidad 26 - Unidad liviana" },
+      { id: "unidad7", nombre: "Unidad 29 - Abastecimiento" },
+      { id: "unidad8", nombre: "Unidad 30 - Unidad liviana" }
+    ];
+    await saveUnidades(defaultUnidades);
+    return defaultUnidades;
+  }
+}
+
+// Guardar unidades
+async function saveUnidades(unidades) {
+  try {
+    await fs.writeFile(UNIDADES_FILE, JSON.stringify(unidades, null, 2), "utf-8");
+    return true;
+  } catch (error) {
+    console.error("Error al guardar unidades:", error);
+    return false;
+  }
+}
+
+async function setup() {
+  // Asegurar carpeta de registros
+  const dirPath = path.join(__dirname, REGISTROS_DIR);
+  await fs.mkdir(dirPath, { recursive: true });
+
+  let unidades = await loadUnidades();
+
+  // Crear servidor HTTP con Express
+  const app = express();
+  app.use(express.static(__dirname)); // Sirve index.html desde esta carpeta
+  const server = http.createServer(app);
+
+  // Crear servidor WebSocket sobre el mismo puerto
+  const wss = new WebSocket.Server({ server });
+
+  function broadcastUnidades() {
+    const mensaje = JSON.stringify({ tipo: "unidades_actualizadas", unidades });
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) client.send(mensaje);
+    });
+  }
+
+  wss.on("connection", (ws) => {
+    console.log("Cliente conectado.");
+
+    ws.send(JSON.stringify({ tipo: "unidades_actualizadas", unidades }));
+
+    ws.on("message", async (message) => {
+      try {
+        const data = JSON.parse(message.toString());
+
+        if (data.tipo === "mantenimiento") {
+          const timestamp = getFormattedTimestamp();
+          const fileName = `${timestamp}_${data.unidad.replace(/\s+/g, "_").replace(/[^\w-]/g, "")}.txt`;
+          const filePath = path.join(dirPath, fileName);
+
+          const fileContent = `REGISTRO DE MANTENIMIENTO
+========================
+Unidad: ${data.unidad}
+Fecha de registro: ${new Date().toLocaleString("es-AR")}
+Operario: ${data.operario}
+Observaciones: ${data.observaciones || "Ninguna"}
+
+========================
+`;
+
+          await fs.writeFile(filePath, fileContent, "utf-8");
+          ws.send(JSON.stringify({ tipo: "confirmacion", mensaje: `Mantenimiento registrado para ${data.unidad}` }));
+
+        } else if (data.tipo === "admin") {
+          if (data.password !== ADMIN_PASSWORD) {
+            ws.send(JSON.stringify({ tipo: "error", mensaje: "Contraseña incorrecta" }));
+            return;
+          }
+
+          if (data.accion === "agregar") {
+            const nuevoId = `unidad${Date.now()}`;
+            const nuevaUnidad = { id: nuevoId, nombre: data.nombreUnidad };
+            unidades.push(nuevaUnidad);
+
+            if (await saveUnidades(unidades)) {
+              broadcastUnidades();
+              ws.send(JSON.stringify({ tipo: "confirmacion", mensaje: `✔️ Unidad "${data.nombreUnidad}" agregada exitosamente` }));
+            }
+          } else if (data.accion === "eliminar") {
+            unidades = unidades.filter((u) => u.id !== data.unidadId);
+
+            if (await saveUnidades(unidades)) {
+              broadcastUnidades();
+              ws.send(JSON.stringify({ tipo: "confirmacion", mensaje: "Unidad eliminada exitosamente" }));
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error procesando mensaje:", error);
+        ws.send(JSON.stringify({ tipo: "error", mensaje: "❌ Error al procesar la solicitud" }));
+      }
+    });
+
+    ws.on("close", () => console.log("Cliente desconectado."));
+  });
+
+  // Iniciar servidor
+  const localIP = getLocalIP();
+  server.listen(PORT, () => {
+    console.log("Servidor iniciado");
+    console.log(` http://${localIP}:${PORT}`);
+    console.log(`Los registros se guardarán en: '${REGISTROS_DIR}'`);
+    console.log("--- Presiona CTRL+C para detener el servidor ---");
+  });
+}
+
+setup();

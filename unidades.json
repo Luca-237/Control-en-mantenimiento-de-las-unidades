@@ -1,0 +1,30 @@
+[
+  {
+    "id": "unidad1",
+    "nombre": "Unidad 18 - Ataque Pesado"
+  },
+  {
+    "id": "unidad2",
+    "nombre": "Unidad 20 - Rescate"
+  },
+  {
+    "id": "unidad3",
+    "nombre": "Unidad 23 - Ataque y rescate"
+  },
+  {
+    "id": "unidad4",
+    "nombre": "Unidad 24 - Unidad liviana"
+  },
+  {
+    "id": "unidad5",
+    "nombre": "Unidad 25 - Transporte de personal"
+  },
+  {
+    "id": "unidad6",
+    "nombre": "Unidad 26 - Unidad liviana"
+  },
+  {
+    "id": "unidad7",
+    "nombre": "Unidad 29 - Abastecimiento"
+  }
+]
