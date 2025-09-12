@@ -5,101 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Mantenimiento</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      color: #d32f2f;
-      margin-bottom: 20px;
-    }
-    .logo {
-      display: block;
-      margin: 0 auto 15px auto;
-      max-width: 120px;
-    }
-    .login-container {
-      text-align: center;
-      margin-top: 40px;
-    }
-    .login-container input {
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 80%;
-      max-width: 300px;
-    }
-    .login-container button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      background: #28a745;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .unit {
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 10px 0;
-      background: #fafafa;
-    }
-    .unit-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .btn {
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      margin: 5px 3px;
-    }
+    body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+    .container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #d32f2f; margin-bottom: 20px; }
+    .logo { display: block; margin: 0 auto 15px auto; max-width: 120px; }
+    .login-container { text-align: center; margin-top: 40px; }
+    .login-container input { padding: 10px; border-radius: 6px; border: 1px solid #ccc; width: 80%; max-width: 300px; }
+    .login-container button { margin-top: 15px; padding: 10px 20px; border: none; border-radius: 6px; background: #28a745; color: white; font-weight: bold; cursor: pointer; }
+    .unit { border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin: 10px 0; background: #fafafa; }
+    .unit-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    .btn { border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 5px 3px; }
     .btn-success { background: #28a745; color: white; }
     .btn-danger { background: #dc3545; color: white; }
+    .btn-warning { background: #ffc107; color: black; }
+    .btn-secondary { background: #6c757d; color: white; }
+    .btn-info { background: #17a2b8; color: white; }
     .btn:hover { opacity: 0.9; }
-    .observaciones-container {
-      margin-top: 10px;
-      display: none;
-    }
-    .observaciones-container textarea {
-      width: 100%;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      resize: vertical;
-      min-height: 60px;
-    }
-    .status {
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 6px;
-      font-weight: bold;
-      text-align: center;
-    }
+    .observaciones-container { margin-top: 10px; display: none; }
+    .observaciones-container textarea { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; resize: vertical; min-height: 60px; }
+    .herramientas-container { margin-top: 10px; display: none; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; }
+    .herramienta-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .herramienta-item:last-child { border-bottom: none; }
+    .herramienta-nombre { font-weight: bold; flex-grow: 1; }
+    .herramienta-actions { display: flex; gap: 5px; }
+    .btn-small { padding: 4px 8px; font-size: 12px; margin: 0; }
+    .nueva-herramienta { margin-top: 15px; padding: 10px; background: #e9ecef; border-radius: 6px; }
+    .nueva-herramienta input { padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 60%; margin-right: 10px; }
+    .abcm-form { margin-top: 10px; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; display: none; }
+    .abcm-form h4 { margin: 0 0 10px 0; color: #856404; }
+    .abcm-form select, .abcm-form input, .abcm-form textarea { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 10px; }
+    .admin-section { margin-top: 30px; padding: 20px; background: #e3f2fd; border: 2px solid #2196f3; border-radius: 8px; }
+    .admin-section h3 { color: #1976d2; margin-top: 0; }
+    .admin-form { display: none; margin-top: 15px; padding: 15px; background: #fff; border-radius: 6px; border: 1px solid #ddd; }
+    .admin-form input, .admin-form textarea, .admin-form select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 10px; }
+    .password-input { background: #fff3cd !important; border: 2px solid #ffc107 !important; }
+    .hidden-fields { display: none; }
+    .change-name-container { display: none; margin-top: 10px; padding: 10px; background: #e8f5e8; border-radius: 6px; border: 1px solid #28a745; }
+    .change-name-container input { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #28a745; margin-bottom: 10px; }
+    .status { margin-top: 20px; padding: 10px; border-radius: 6px; font-weight: bold; text-align: center; }
     .status-success { background: #d4edda; color: #155724; }
     .status-error { background: #f8d7da; color: #721c24; }
   </style>
 </head>
 <body>
   <div class="container" id="login-screen">
-    <img src="descarga.jpg" alt="Logo" class="logo">
+    <img src="descarga.jpg" alt="Logo Bomberos" class="logo">
     <h1>Ingreso al Sistema</h1>
     <div class="login-container">
       <input type="text" id="nombre-operario" placeholder="Ingrese su nombre">
@@ -109,14 +59,65 @@
   </div>
 
   <div class="container" id="app-screen" style="display:none;">
-    <img src="descarga.jpg" alt="Logo" class="logo">
+    <img src="descarga.jpg" alt="Logo Bomberos" class="logo">
     <h1>Control de Mantenimiento</h1>
     <p><b>Operario:</b> <span id="operario-nombre"></span></p>
     <div id="unidades-container"></div>
+
+    <div class="admin-section">
+      <h3>🔧 Administración de Unidades</h3>
+      <p><small>Requiere contraseña de administrador</small></p>
+      <button class="btn btn-info" onclick="mostrarFormulario('agregar')">+ Agregar Nueva Unidad</button>
+      <button class="btn btn-warning" onclick="mostrarFormulario('modificar')">✏️ Modificar Unidad</button>
+      <button class="btn btn-danger" onclick="mostrarFormulario('eliminar')">🗑️ Eliminar Unidad</button>
+
+      <div id="form-agregar" class="admin-form">
+        <h4>Agregar Nueva Unidad</h4>
+        <div id="validacion-agregar">
+          <input type="password" id="password-agregar" placeholder="Contraseña de administrador" class="password-input">
+          <button class="btn btn-info" onclick="validarPassword('agregar')">Validar Contraseña</button>
+        </div>
+        <div id="campos-agregar" class="hidden-fields">
+          <input type="text" id="nombre-nueva-unidad" placeholder="Nombre de la nueva unidad">
+          <textarea id="herramientas-nueva-unidad" placeholder="Herramientas (una por línea)" rows="4"></textarea>
+          <button class="btn btn-success" onclick="procesarUnidad('agregar')">Crear Unidad</button>
+        </div>
+        <button class="btn btn-secondary" onclick="ocultarFormularios()">Cancelar</button>
+      </div>
+
+      <div id="form-modificar" class="admin-form">
+        <h4>Modificar Unidad</h4>
+        <div id="validacion-modificar">
+            <input type="password" id="password-modificar" placeholder="Contraseña de administrador" class="password-input">
+            <button class="btn btn-info" onclick="validarPassword('modificar')">Validar Contraseña</button>
+        </div>
+        <div id="campos-modificar" class="hidden-fields">
+          <select id="select-unidad-modificar"><option value="">Seleccione una unidad</option></select>
+          <input type="text" id="nombre-modificar-unidad" placeholder="Nuevo nombre de la unidad">
+          <button class="btn btn-warning" onclick="procesarUnidad('modificar')">Modificar Unidad</button>
+        </div>
+        <button class="btn btn-secondary" onclick="ocultarFormularios()">Cancelar</button>
+      </div>
+
+      <div id="form-eliminar" class="admin-form">
+        <h4>⚠️ Eliminar Unidad</h4>
+        <p style="color: #dc3545;"><small>Esta acción no se puede deshacer</small></p>
+        <div id="validacion-eliminar">
+            <input type="password" id="password-eliminar" placeholder="Contraseña de administrador" class="password-input">
+            <button class="btn btn-info" onclick="validarPassword('eliminar')">Validar Contraseña</button>
+        </div>
+        <div id="campos-eliminar" class="hidden-fields">
+          <select id="select-unidad-eliminar"><option value="">Seleccione una unidad</option></select>
+          <button class="btn btn-danger" onclick="procesarUnidad('eliminar')">Eliminar Unidad</button>
+        </div>
+        <button class="btn btn-secondary" onclick="ocultarFormularios()">Cancelar</button>
+      </div>
+    </div>
+
     <div id="status" class="status">Esperando conexión con el servidor...</div>
   </div>
 
-  <script>
+<script>
     const statusDiv = document.getElementById("status");
     const unidadesContainer = document.getElementById("unidades-container");
     const loginScreen = document.getElementById("login-screen");
@@ -125,6 +126,7 @@
     let unidades = [];
     let socket;
     let operario = "";
+    let passwordValidada = {};
 
     function ingresar() {
       const nombre = document.getElementById("nombre-operario").value.trim();
@@ -157,26 +159,39 @@
           if (data.tipo === "unidades_actualizadas") {
             unidades = data.unidades;
             renderizarUnidades();
+            actualizarSelectoresAdmin();
           } else if (data.tipo === "confirmacion") {
             statusDiv.textContent = data.mensaje;
             statusDiv.className = "status status-success";
           } else if (data.tipo === "error") {
             statusDiv.textContent = data.mensaje;
             statusDiv.className = "status status-error";
+          } else if (data.tipo === "password_validado") {
+            const accion = data.accion;
+            statusDiv.textContent = data.mensaje;
+            if (data.valido) {
+              passwordValidada[accion] = true;
+              mostrarCamposAdmin(accion);
+              statusDiv.className = "status status-success";
+            } else {
+              statusDiv.className = "status status-error";
+            }
           }
-        } catch {
-          statusDiv.textContent = event.data;
+        } catch (e) {
+            console.error("Error parsing message:", e);
+            statusDiv.textContent = "Error procesando respuesta del servidor.";
+            statusDiv.className = "status status-error";
         }
       };
 
       socket.onclose = () => {
-        statusDiv.textContent = "Desconectado. Reintentando...";
+        statusDiv.textContent = "🔴 Desconectado. Reintentando conectar...";
         statusDiv.className = "status status-error";
         setTimeout(conectarServidor, 3000);
       };
 
       socket.onerror = () => {
-        statusDiv.textContent = "Error de conexión.";
+        statusDiv.textContent = "❌ Error de conexión. Asegúrese que el servidor esté encendido.";
         statusDiv.className = "status status-error";
       };
     }
@@ -191,24 +206,113 @@
             <span><b>${unidad.nombre}</b></span>
             <div>
               <button class="btn btn-success" onclick="registrarMantenimiento('${unidad.id}','${unidad.nombre}',true)">✔️ En condiciones</button>
-              <button class="btn btn-danger" onclick="mostrarObservaciones('${unidad.id}')">❌ No en condiciones</button>
+              <button class="btn btn-warning" onclick="mostrarHerramientas('${unidad.id}')">Modificar Herramientas</button>
+              <button class="btn btn-danger" onclick="mostrarObservaciones('${unidad.id}')">⚠️ No en condiciones</button>
             </div>
           </div>
           <div class="observaciones-container" id="obs-${unidad.id}">
             <textarea id="obs-text-${unidad.id}" placeholder="Escribe observaciones..."></textarea>
             <button class="btn btn-danger" onclick="registrarMantenimiento('${unidad.id}','${unidad.nombre}',false)">Confirmar</button>
           </div>
+          <div class="herramientas-container" id="herr-${unidad.id}">
+            <h3>Gestión de Herramientas - ${unidad.nombre}</h3>
+            <div id="lista-herramientas-${unidad.id}">${renderizarHerramientas(unidad)}</div>
+            <div class="nueva-herramienta">
+              <input type="text" id="nueva-herr-${unidad.id}" placeholder="Nombre de la nueva herramienta">
+              <button class="btn btn-success btn-small" onclick="agregarHerramienta('${unidad.id}')">+ Agregar</button>
+            </div>
+            <div class="abcm-form" id="abcm-${unidad.id}">
+              <h4>Registro ABCM</h4>
+              <select id="tipo-abcm-${unidad.id}">
+                <option value="alta">Alta</option>
+                <option value="baja">Baja</option>
+                <option value="cambio">Cambio</option>
+                <option value="modificacion">Modificación</option>
+              </select>
+              <input type="text" id="herramienta-abcm-${unidad.id}" placeholder="Nombre de la herramienta" readonly>
+              <div class="change-name-container" id="cambio-nombre-${unidad.id}">
+                <input type="text" id="nueva-herramienta-${unidad.id}" placeholder="Nuevo nombre de la herramienta">
+              </div>
+              <textarea id="detalle-abcm-${unidad.id}" placeholder="Detalles del movimiento ABCM..."></textarea>
+              <button class="btn btn-warning" onclick="registrarABCM('${unidad.id}')">Registrar</button>
+              <button class="btn btn-secondary" onclick="cancelarABCM('${unidad.id}')">Cancelar</button>
+            </div>
+            <button class="btn btn-secondary" onclick="ocultarHerramientas('${unidad.id}')">Cerrar</button>
+          </div>
         `;
         unidadesContainer.appendChild(unitDiv);
       });
     }
 
-    function mostrarObservaciones(unidadId) {
-      document.getElementById(`obs-${unidadId}`).style.display = "block";
+    function renderizarHerramientas(unidad) {
+      if (!unidad.herramientas || unidad.herramientas.length === 0) {
+        return '<p>No hay herramientas registradas para esta unidad.</p>';
+      }
+      return unidad.herramientas.map(herramienta => `
+        <div class="herramienta-item">
+          <span class="herramienta-nombre">${herramienta}</span>
+          <div class="herramienta-actions">
+            <button class="btn btn-warning btn-small" onclick="iniciarABCM('${unidad.id}', '${herramienta}', 'modificacion')">Modificar</button>
+            <button class="btn btn-warning btn-small" onclick="iniciarABCM('${unidad.id}', '${herramienta}', 'cambio')">Cambiar</button>
+            <button class="btn btn-danger btn-small" onclick="iniciarABCM('${unidad.id}', '${herramienta}', 'baja')">Dar de baja</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function mostrarObservaciones(unidadId) { document.getElementById(`obs-${unidadId}`).style.display = "block"; }
+    function mostrarHerramientas(unidadId) { document.getElementById(`herr-${unidadId}`).style.display = "block"; }
+    function ocultarHerramientas(unidadId) { document.getElementById(`herr-${unidadId}`).style.display = "none"; }
+
+    function agregarHerramienta(unidadId) {
+      const input = document.getElementById(`nueva-herr-${unidadId}`);
+      const nombreHerramienta = input.value.trim();
+      if (!nombreHerramienta) return alert("Ingrese el nombre de la herramienta");
+      socket.send(JSON.stringify({ tipo: "agregar_herramienta", unidadId, herramienta: nombreHerramienta, operario }));
+      input.value = "";
+    }
+
+    function iniciarABCM(unidadId, herramienta, tipo) {
+      const form = document.getElementById(`abcm-${unidadId}`);
+      const cambioNombreContainer = document.getElementById(`cambio-nombre-${unidadId}`);
+      document.getElementById(`tipo-abcm-${unidadId}`).value = tipo;
+      document.getElementById(`herramienta-abcm-${unidadId}`).value = herramienta;
+      if (tipo === 'cambio' || tipo === 'modificacion') {
+        cambioNombreContainer.style.display = "block";
+        document.getElementById(`nueva-herramienta-${unidadId}`).value = herramienta;
+      } else {
+        cambioNombreContainer.style.display = "none";
+      }
+      form.style.display = "block";
+    }
+
+    function cancelarABCM(unidadId) {
+      const form = document.getElementById(`abcm-${unidadId}`);
+      form.style.display = "none";
+      document.getElementById(`cambio-nombre-${unidadId}`).style.display = "none";
+      document.getElementById(`detalle-abcm-${unidadId}`).value = "";
+      document.getElementById(`nueva-herramienta-${unidadId}`).value = "";
+    }
+
+    function registrarABCM(unidadId) {
+      const tipo = document.getElementById(`tipo-abcm-${unidadId}`).value;
+      const herramienta = document.getElementById(`herramienta-abcm-${unidadId}`).value;
+      const detalle = document.getElementById(`detalle-abcm-${unidadId}`).value.trim();
+      if (!detalle) return alert("Debe ingresar los detalles del movimiento ABCM");
+
+      const mensaje = { tipo: "abcm", unidadId, tipoABCM: tipo, herramienta, detalle, operario };
+      if (tipo === 'cambio' || tipo === 'modificacion') {
+        const nuevaHerramienta = document.getElementById(`nueva-herramienta-${unidadId}`).value.trim();
+        if (!nuevaHerramienta) return alert("Debe ingresar el nuevo nombre de la herramienta");
+        mensaje.herramientaOriginal = herramienta;
+        mensaje.herramientaNueva = nuevaHerramienta;
+      }
+      socket.send(JSON.stringify(mensaje));
+      cancelarABCM(unidadId);
     }
 
     function registrarMantenimiento(unidadId, nombreUnidad, enCondiciones) {
-      let observaciones = "";
+      let observaciones = "Sin observaciones (Unidad en condiciones)";
       if (!enCondiciones) {
         observaciones = document.getElementById(`obs-text-${unidadId}`).value.trim();
         if (!observaciones) {
@@ -217,19 +321,92 @@
           return;
         }
       }
-      const mensaje = {
-        tipo: "mantenimiento",
-        unidad: nombreUnidad,
-        observaciones: enCondiciones ? "Ninguna (Unidad en condiciones)" : observaciones,
-        operario: operario
-      };
-      socket.send(JSON.stringify(mensaje));
+      socket.send(JSON.stringify({ tipo: "mantenimiento", unidad: nombreUnidad, observaciones, operario }));
       if (!enCondiciones) {
         document.getElementById(`obs-text-${unidadId}`).value = "";
         document.getElementById(`obs-${unidadId}`).style.display = "none";
       }
     }
-  </script>
+
+    // --- LÓGICA DE ADMINISTRACIÓN CORREGIDA ---
+
+    function mostrarFormulario(accion) {
+      ocultarFormularios();
+      document.getElementById(`form-${accion}`).style.display = "block";
+    }
+
+    function ocultarFormularios() {
+      ['agregar', 'modificar', 'eliminar'].forEach(accion => {
+        const form = document.getElementById(`form-${accion}`);
+        if(form) form.style.display = "none";
+        
+        const campos = document.getElementById(`campos-${accion}`);
+        if(campos) campos.classList.add('hidden-fields');
+
+        const validacion = document.getElementById(`validacion-${accion}`);
+        if(validacion) validacion.style.display = 'block';
+
+        const passwordInput = document.getElementById(`password-${accion}`);
+        if(passwordInput) passwordInput.value = "";
+
+        passwordValidada[accion] = false;
+      });
+    }
+
+    function mostrarCamposAdmin(accion) {
+      document.getElementById(`campos-${accion}`).classList.remove('hidden-fields');
+      document.getElementById(`validacion-${accion}`).style.display = 'none';
+    }
+
+    function actualizarSelectoresAdmin() {
+      const selects = ['select-unidad-modificar', 'select-unidad-eliminar'];
+      selects.forEach(selectId => {
+        const selectElem = document.getElementById(selectId);
+        selectElem.innerHTML = '<option value="">Seleccione una unidad</option>';
+        unidades.forEach(unidad => {
+          selectElem.innerHTML += `<option value="${unidad.id}">${unidad.nombre}</option>`;
+        });
+      });
+    }
+
+    function validarPassword(accion) {
+      const password = document.getElementById(`password-${accion}`).value;
+      if (!password) {
+        statusDiv.textContent = "❌ Ingrese la contraseña";
+        statusDiv.className = "status status-error";
+        return;
+      }
+      socket.send(JSON.stringify({ tipo: "validar_password", password, accion }));
+    }
+
+    function procesarUnidad(accion) {
+      if (!passwordValidada[accion]) {
+        alert("Error: La contraseña no ha sido validada. Por favor, valide primero.");
+        return;
+      }
+      const password = document.getElementById(`password-${accion}`).value;
+      let mensaje = { tipo: `${accion}_unidad`, password };
+
+      if (accion === 'agregar') {
+        mensaje.nombre = document.getElementById('nombre-nueva-unidad').value.trim();
+        if (!mensaje.nombre) return alert("Ingrese el nombre de la unidad");
+        const herramientasText = document.getElementById('herramientas-nueva-unidad').value.trim();
+        mensaje.herramientas = herramientasText ? herramientasText.split('\n').map(h => h.trim()).filter(h => h) : [];
+      } else if (accion === 'modificar') {
+        mensaje.unidadId = document.getElementById('select-unidad-modificar').value;
+        mensaje.nombre = document.getElementById('nombre-modificar-unidad').value.trim();
+        if (!mensaje.unidadId || !mensaje.nombre) return alert("Seleccione una unidad e ingrese un nuevo nombre.");
+      } else if (accion === 'eliminar') {
+        mensaje.unidadId = document.getElementById('select-unidad-eliminar').value;
+        if (!mensaje.unidadId) return alert("Seleccione una unidad para eliminar.");
+        const unidad = unidades.find(u => u.id === mensaje.unidadId);
+        if (!confirm(`¿Está seguro de eliminar la unidad "${unidad.nombre}"?`)) return;
+      }
+
+      socket.send(JSON.stringify(mensaje));
+      setTimeout(ocultarFormularios, 500);
+    }
+</script>
+
 </body>
 </html>
-
