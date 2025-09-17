@@ -5,49 +5,503 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Mantenimiento</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
-    .container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-    h1 { text-align: center; color: #d32f2f; margin-bottom: 20px; }
-    .logo { display: block; margin: 0 auto 15px auto; max-width: 120px; }
-    .login-container { text-align: center; margin-top: 40px; }
-    .login-container input { padding: 10px; border-radius: 6px; border: 1px solid #ccc; width: 80%; max-width: 300px; }
-    .login-container button { margin-top: 15px; padding: 10px 20px; border: none; border-radius: 6px; background: #28a745; color: white; font-weight: bold; cursor: pointer; }
-    .unit { border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin: 10px 0; background: #fafafa; }
-    .unit-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-    .btn { border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 5px 3px; }
-    .btn-success { background: #28a745; color: white; }
-    .btn-danger { background: #dc3545; color: white; }
-    .btn-warning { background: #ffc107; color: black; }
-    .btn-secondary { background: #6c757d; color: white; }
-    .btn-info { background: #17a2b8; color: white; }
-    .btn:hover { opacity: 0.9; }
-    .observaciones-container { margin-top: 10px; display: none; }
-    .observaciones-container textarea { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; resize: vertical; min-height: 60px; }
-    .herramientas-container { margin-top: 10px; display: none; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; }
-    .herramienta-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; }
-    .herramienta-item:last-child { border-bottom: none; }
-    .herramienta-nombre { font-weight: bold; flex-grow: 1; }
-    .herramienta-actions { display: flex; gap: 5px; }
-    .btn-small { padding: 4px 8px; font-size: 12px; margin: 0; }
-    .nueva-herramienta { margin-top: 15px; padding: 10px; background: #e9ecef; border-radius: 6px; }
-    .nueva-herramienta input { padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 60%; margin-right: 10px; }
-    .abcm-form { margin-top: 10px; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; display: none; }
-    .abcm-form h4 { margin: 0 0 10px 0; color: #856404; }
-    .abcm-form select, .abcm-form input, .abcm-form textarea { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 10px; }
-    .admin-section { margin-top: 30px; padding: 20px; background: #e3f2fd; border: 2px solid #2196f3; border-radius: 8px; }
-    .admin-section h3 { color: #1976d2; margin-top: 0; }
-    .admin-form { display: none; margin-top: 15px; padding: 15px; background: #fff; border-radius: 6px; border: 1px solid #ddd; }
-    .admin-form input, .admin-form textarea, .admin-form select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 10px; }
-    .password-input { background: #fff3cd !important; border: 2px solid #ffc107 !important; }
-    .hidden-fields { display: none; }
-    .change-name-container { display: none; margin-top: 10px; padding: 10px; background: #e8f5e8; border-radius: 6px; border: 1px solid #28a745; }
-    .change-name-container input { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #28a745; margin-bottom: 10px; }
-    .status { margin-top: 20px; padding: 10px; border-radius: 6px; font-weight: bold; text-align: center; }
-    .status-success { background: #d4edda; color: #155724; }
-    .status-error { background: #f8d7da; color: #721c24; }
-    .admin-herramientas { margin-top: 10px; padding: 10px; background: #fff; border-radius: 6px; border: 1px solid #ddd; display: none; }
-    .herramientas-admin-buttons { margin-top: 15px; }
-    .validation-container { margin-top: 10px; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; }
+    * {
+      box-sizing: border-box;
+    }
+    
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      margin: 0; 
+      padding: 10px; 
+      min-height: 100vh;
+    }
+    
+    .container { 
+      max-width: 100%; 
+      margin: auto; 
+      background: rgba(255, 255, 255, 0.95); 
+      padding: 15px; 
+      border-radius: 16px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+      backdrop-filter: blur(10px);
+    }
+    
+    h1 { 
+      text-align: center; 
+      color: #d32f2f; 
+      margin-bottom: 20px; 
+      font-size: 1.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .logo { 
+      display: block; 
+      margin: 0 auto 15px auto; 
+      max-width: 80px; 
+    }
+    
+    .login-container { 
+      text-align: center; 
+      margin-top: 40px; 
+    }
+    
+    .login-container input { 
+      padding: 12px; 
+      border-radius: 8px; 
+      border: 2px solid #e0e0e0; 
+      width: 90%; 
+      max-width: 300px; 
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    
+    .login-container input:focus {
+      border-color: #28a745;
+      outline: none;
+    }
+    
+    .login-container button { 
+      margin-top: 15px; 
+      padding: 12px 24px; 
+      border: none; 
+      border-radius: 8px; 
+      background: linear-gradient(45deg, #28a745, #20c997); 
+      color: white; 
+      font-weight: bold; 
+      cursor: pointer; 
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+    
+    .login-container button:hover {
+      transform: translateY(-2px);
+    }
+    
+    .unit { 
+      border: none;
+      border-radius: 12px; 
+      padding: 15px; 
+      margin: 15px 0; 
+      background: linear-gradient(145deg, #ffffff, #f8f9fa);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .unit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    
+    .unit-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      flex-wrap: wrap; 
+      gap: 10px;
+    }
+    
+    .unit-name {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #333;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .unit-buttons {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    
+    .btn { 
+      border: none; 
+      padding: 8px 12px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: 600; 
+      margin: 2px; 
+      font-size: 14px;
+      transition: all 0.2s ease;
+      min-width: 80px;
+      text-align: center;
+    }
+    
+    .btn-success { 
+      background: linear-gradient(45deg, #28a745, #20c997); 
+      color: white; 
+    }
+    
+    .btn-danger { 
+      background: linear-gradient(45deg, #dc3545, #e63946); 
+      color: white; 
+    }
+    
+    .btn-warning { 
+      background: linear-gradient(45deg, #ffc107, #ffb347); 
+      color: #333; 
+    }
+    
+    .btn-secondary { 
+      background: linear-gradient(45deg, #6c757d, #5a6268); 
+      color: white; 
+    }
+    
+    .btn-info { 
+      background: linear-gradient(45deg, #17a2b8, #138496); 
+      color: white; 
+    }
+    
+    .btn:hover { 
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .observaciones-container { 
+      margin-top: 15px; 
+      display: none; 
+      animation: slideDown 0.3s ease;
+    }
+    
+    .observaciones-container textarea { 
+      width: 100%; 
+      padding: 12px; 
+      border-radius: 8px; 
+      border: 2px solid #e0e0e0; 
+      resize: vertical; 
+      min-height: 80px; 
+      font-family: inherit;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    
+    .observaciones-container textarea:focus {
+      border-color: #dc3545;
+      outline: none;
+    }
+    
+    .herramientas-container { 
+      margin-top: 15px; 
+      display: none; 
+      background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+      padding: 20px; 
+      border-radius: 12px; 
+      border: 2px solid #dee2e6;
+      animation: slideDown 0.3s ease;
+    }
+    
+    .herramientas-container h3 {
+      margin-top: 0;
+      color: #495057;
+      font-size: 1.2rem;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .herramienta-item { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 12px; 
+      margin: 8px 0;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+    
+    .herramienta-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .herramienta-nombre { 
+      font-weight: 600; 
+      flex-grow: 1; 
+      color: #333;
+    }
+    
+    .herramienta-actions { 
+      display: flex; 
+      gap: 5px; 
+      flex-wrap: wrap;
+    }
+    
+    .btn-small { 
+      padding: 6px 10px; 
+      font-size: 12px; 
+      margin: 0; 
+      border-radius: 6px;
+    }
+    
+    .nueva-herramienta { 
+      margin-top: 20px; 
+      padding: 15px; 
+      background: linear-gradient(145deg, #e9ecef, #f8f9fa);
+      border-radius: 8px; 
+      border: 2px dashed #6c757d;
+    }
+    
+    .nueva-herramienta input { 
+      padding: 10px; 
+      border-radius: 6px; 
+      border: 2px solid #ced4da; 
+      width: calc(70% - 5px); 
+      margin-right: 10px; 
+      font-size: 16px;
+    }
+    
+    .nueva-herramienta button {
+      width: calc(30% - 5px);
+      min-width: 80px;
+    }
+    
+    .abcm-form { 
+      margin-top: 15px; 
+      padding: 15px; 
+      background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+      border: 2px solid #ffc107; 
+      border-radius: 8px; 
+      display: none; 
+    }
+    
+    .abcm-form h4 { 
+      margin: 0 0 15px 0; 
+      color: #856404; 
+      text-align: center;
+    }
+    
+    .abcm-form select, .abcm-form input, .abcm-form textarea { 
+      width: 100%; 
+      padding: 10px; 
+      border-radius: 6px; 
+      border: 2px solid #e0a800; 
+      margin-bottom: 10px; 
+      font-size: 16px;
+    }
+    
+    .admin-section { 
+      margin-top: 30px; 
+      padding: 20px; 
+      background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+      border: 2px solid #2196f3; 
+      border-radius: 12px; 
+    }
+    
+    .admin-section h3 { 
+      color: #1976d2; 
+      margin-top: 0; 
+      text-align: center;
+    }
+    
+    .admin-form { 
+      display: none; 
+      margin-top: 15px; 
+      padding: 20px; 
+      background: white; 
+      border-radius: 8px; 
+      border: 2px solid #ddd; 
+      animation: slideDown 0.3s ease;
+    }
+    
+    .admin-form input, .admin-form textarea, .admin-form select { 
+      width: 100%; 
+      padding: 12px; 
+      border-radius: 6px; 
+      border: 2px solid #ced4da; 
+      margin-bottom: 15px; 
+      font-size: 16px;
+    }
+    
+    .password-input { 
+      background: #fff3cd !important; 
+      border: 2px solid #ffc107 !important; 
+    }
+    
+    .hidden-fields { 
+      display: none; 
+    }
+    
+    .change-name-container { 
+      display: none; 
+      margin-top: 10px; 
+      padding: 15px; 
+      background: linear-gradient(145deg, #e8f5e8, #d4edda);
+      border-radius: 8px; 
+      border: 2px solid #28a745; 
+    }
+    
+    .change-name-container input { 
+      width: 100%; 
+      padding: 10px; 
+      border-radius: 6px; 
+      border: 2px solid #28a745; 
+      margin-bottom: 10px; 
+      font-size: 16px;
+    }
+    
+    .status { 
+      margin-top: 20px; 
+      padding: 15px; 
+      border-radius: 8px; 
+      font-weight: 600; 
+      text-align: center; 
+      font-size: 14px;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .status-success { 
+      background: linear-gradient(145deg, #d4edda, #c3e6cb);
+      color: #155724; 
+      border: 2px solid #28a745;
+    }
+    
+    .status-error { 
+      background: linear-gradient(145deg, #f8d7da, #f1b0b7);
+      color: #721c24; 
+      border: 2px solid #dc3545;
+    }
+    
+    .admin-herramientas { 
+      margin-top: 15px; 
+      padding: 15px; 
+      background: white; 
+      border-radius: 8px; 
+      border: 2px solid #ddd; 
+      display: none; 
+    }
+    
+    .herramientas-admin-buttons { 
+      margin-top: 20px; 
+      text-align: center;
+    }
+    
+    .validation-container { 
+      margin-top: 15px; 
+      padding: 15px; 
+      background: linear-gradient(145deg, #fff3cd, #ffeaa7);
+      border: 2px solid #ffc107; 
+      border-radius: 8px; 
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+        margin: 5px;
+        border-radius: 12px;
+      }
+      
+      h1 {
+        font-size: 1.3rem;
+      }
+      
+      .unit-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      }
+      
+      .unit-name {
+        text-align: center;
+        min-width: auto;
+      }
+      
+      .unit-buttons {
+        justify-content: center;
+      }
+      
+      .btn {
+        flex: 1;
+        min-width: 0;
+        font-size: 12px;
+        padding: 10px 8px;
+      }
+      
+      .herramienta-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      
+      .herramienta-actions {
+        justify-content: center;
+      }
+      
+      .nueva-herramienta {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .nueva-herramienta input {
+        width: 100%;
+        margin: 0;
+      }
+      
+      .nueva-herramienta button {
+        width: 100%;
+      }
+      
+      .admin-section {
+        padding: 15px;
+      }
+      
+      .admin-section .btn {
+        width: 100%;
+        margin: 5px 0;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+      
+      .container {
+        padding: 10px;
+      }
+      
+      .unit {
+        padding: 12px;
+        margin: 10px 0;
+      }
+      
+      .btn {
+        font-size: 11px;
+        padding: 8px 6px;
+      }
+      
+      .herramientas-container {
+        padding: 15px;
+      }
+      
+      .btn-small {
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -129,6 +583,7 @@
     let operario = "";
     let passwordValidada = {};
     let adminValidado = false;
+    let herramientasAbiertas = null; // Variable para controlar qué sección está abierta
 
     function ingresar() {
       const nombre = document.getElementById("nombre-operario").value.trim();
@@ -205,7 +660,7 @@
       };
 
       socket.onerror = () => {
-        statusDiv.textContent = "⌒ Error de conexión. Asegúrese que el servidor esté encendido.";
+        statusDiv.textContent = "⚠️ Error de conexión. Asegúrese que el servidor esté encendido.";
         statusDiv.className = "status status-error";
       };
     }
@@ -217,10 +672,10 @@
         unitDiv.className = "unit";
         unitDiv.innerHTML = `
           <div class="unit-header">
-            <span><b>${unidad.nombre}</b></span>
-            <div>
+            <span class="unit-name">${unidad.nombre}</span>
+            <div class="unit-buttons">
               <button class="btn btn-success" onclick="registrarMantenimiento('${unidad.id}','${unidad.nombre}',true)">✅ En condiciones</button>
-              <button class="btn btn-warning" onclick="mostrarHerramientas('${unidad.id}')">Ver Herramientas</button>
+              <button class="btn btn-warning" onclick="mostrarHerramientas('${unidad.id}')">🔧 Ver Herramientas</button>
               <button class="btn btn-danger" onclick="mostrarObservaciones('${unidad.id}')">⚠️ No en condiciones</button>
             </div>
           </div>
@@ -229,10 +684,10 @@
             <button class="btn btn-danger" onclick="registrarMantenimiento('${unidad.id}','${unidad.nombre}',false)">Confirmar</button>
           </div>
           <div class="herramientas-container" id="herr-${unidad.id}">
-            <h3>Herramientas de ${unidad.nombre}</h3>
+            <h3>🛠️ Herramientas de ${unidad.nombre}</h3>
             <div id="lista-herramientas-${unidad.id}">${renderizarHerramientas(unidad)}</div>
             <div class="herramientas-admin-buttons">
-              <button class="btn btn-info" onclick="mostrarFormularioHerramientas('${unidad.id}')">🛠️ Administrar</button>
+              <button class="btn btn-info" onclick="mostrarFormularioHerramientas('${unidad.id}')">🔧 Administrar</button>
             </div>
             <div id="admin-herramientas-${unidad.id}" style="display: none;">
               <div id="validacion-herramientas-${unidad.id}" class="validation-container">
@@ -285,9 +740,27 @@
       `).join('');
     }
 
-    function mostrarObservaciones(unidadId) { document.getElementById(`obs-${unidadId}`).style.display = "block"; }
+    function mostrarObservaciones(unidadId) { 
+      // Cerrar cualquier sección de herramientas abierta
+      if (herramientasAbiertas) {
+        ocultarHerramientas(herramientasAbiertas);
+      }
+      document.getElementById(`obs-${unidadId}`).style.display = "block"; 
+    }
     
     function mostrarHerramientas(unidadId) {
+      // Si ya hay una sección abierta y es diferente, cerrarla
+      if (herramientasAbiertas && herramientasAbiertas !== unidadId) {
+        ocultarHerramientas(herramientasAbiertas);
+      }
+      
+      // Si es la misma sección, alternar
+      if (herramientasAbiertas === unidadId) {
+        ocultarHerramientas(unidadId);
+        return;
+      }
+      
+      herramientasAbiertas = unidadId;
       document.getElementById(`herr-${unidadId}`).style.display = "block";
       document.getElementById(`admin-herramientas-${unidadId}`).style.display = "none";
     }
@@ -310,6 +783,9 @@
     
     function ocultarHerramientas(unidadId) {
       document.getElementById(`herr-${unidadId}`).style.display = "none";
+      if (herramientasAbiertas === unidadId) {
+        herramientasAbiertas = null;
+      }
     }
 
     function agregarHerramienta(unidadId) {
@@ -449,7 +925,7 @@
       const passwordInput = document.getElementById(`password-${accion}`);
       const password = passwordInput ? passwordInput.value : "";
       if (!password) {
-        statusDiv.textContent = "⌒ Ingrese la contraseña";
+        statusDiv.textContent = "⚠️ Ingrese la contraseña";
         statusDiv.className = "status status-error";
         return;
       }
