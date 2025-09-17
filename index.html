@@ -583,7 +583,7 @@
     let operario = "";
     let passwordValidada = {};
     let adminValidado = false;
-    let herramientasAbiertas = null; // Variable para controlar qué sección está abierta
+    let herramientasAbiertas = null; 
 
     function ingresar() {
       const nombre = document.getElementById("nombre-operario").value.trim();
@@ -741,7 +741,6 @@
     }
 
     function mostrarObservaciones(unidadId) { 
-      // Cerrar cualquier sección de herramientas abierta
       if (herramientasAbiertas) {
         ocultarHerramientas(herramientasAbiertas);
       }
@@ -749,12 +748,10 @@
     }
     
     function mostrarHerramientas(unidadId) {
-      // Si ya hay una sección abierta y es diferente, cerrarla
       if (herramientasAbiertas && herramientasAbiertas !== unidadId) {
         ocultarHerramientas(herramientasAbiertas);
       }
       
-      // Si es la misma sección, alternar
       if (herramientasAbiertas === unidadId) {
         ocultarHerramientas(unidadId);
         return;
@@ -967,3 +964,4 @@
 
 </body>
 </html>
+
